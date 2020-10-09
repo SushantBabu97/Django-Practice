@@ -1,0 +1,167 @@
+{% load bootstrap3 %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<!DOCTYPE html>
+<html>
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<style>
+    body, h1, h2, h3, h4, h5 {
+        font-family: "Raleway", sans-serif
+    }
+</style>
+<body class="w3-light-grey">
+
+<!-- w3-content defines a container for fixed size centered content,
+and is wrapped around the whole page content, except for the footer in this example -->
+<div class="w3-content" style="max-width:1400px">
+
+    <!-- Header -->
+    <header class="w3-container w3-center w3-padding-32">
+        <h1><b>SCIENCE: EARTH & SPACE</b></h1>
+        <p>Welcome to the blog of <span class="w3-tag">{{ name }}</span></p>
+    </header>
+
+
+    <!-- Grid -->
+    <div class="w3-row">
+
+        <!-- Blog entries -->
+        <div class="w3-col l8 s12">
+            <!-- Blog entry -->
+            {% for blog in blogs %}
+                <div class="w3-card-4 w3-margin w3-white">
+                    <img src="{% static 'img/science.png' %}" alt="Nature" style="width:100%">
+                    <div class="w3-container">
+                        <h3><b>{{ blog.title }}</b></h3>
+                        <h5>Title description, <span class="w3-opacity">April 7, 2014</span></h5>
+                    </div>
+
+                    <div class="w3-container">
+                        {{ blog.content | safe }}
+                        <div class="w3-row">
+                            <div class="w3-col m8 s12">
+                                <p>
+                                    <button class="w3-button w3-padding-large w3-white w3-border" data-toggle="modal"
+                                            data-target="#blog-{{ blog.id }}"><b>Write Comment
+                                        &raquo;</b></button>
+                                </p>
+                            </div>
+                            <div class="w3-col m4 w3-hide-small">
+                                <p><span class="w3-padding-large w3-right"><b>Comments &nbsp;</b> <span
+                                        class="w3-tag">{{ blog.comment_set.count }}</span></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+
+                <div id="blog-{{ blog.id }}" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+                     aria-labelledby="myLargeModalLabel">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <h3>Comments</h3>
+                                    {% for comment in blog.comment_set.all %}
+                                        <div class="well">
+                                            <p>{{ comment.message }}</p>
+                                            <p>By <b>{{ comment.name }}</b></p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <form method="post" action="{% url 'comment' blog.id %}">
+                                        {% csrf_token %}
+                                        {% bootstrap_form comment_form layout='horizontal' %}
+                                        <button type="Submit" class="btn btn-sm btn-default">Submit</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <!-- END BLOG ENTRIES -->
+        </div>
+
+        <!-- Introduction menu -->
+        <div class="w3-col l4">
+            <!-- About Card -->
+            <div class="w3-card w3-margin w3-margin-top">
+                <img src="{% static 'img/Spa.png' %}" style="width:100%">
+                <div class="w3-container w3-white">
+                    <h4><b>Space Science</b></h4>
+                    <p>Space science encompasses all of the scientific disciplines that involve space exploration and study natural phenomena and physical bodies occurring in outer space, such as space medicine and astrobiology.</p>
+                </div>
+            </div>
+            <hr>
+
+            <!-- Posts -->
+            <div class="w3-card w3-margin">
+                <div class="w3-container w3-padding">
+                    <h4>Popular Posts</h4>
+                </div>
+                <ul class="w3-ul w3-hoverable w3-white">
+                    {% for post in popular_posts %}
+                        <li class="w3-padding-16">
+                            <img src="{% static 'img/ro.png' %}" alt="Image" class="w3-left w3-margin-right"
+                                 style="width:50px">
+                            <span class="w3-large">{{ post.title }}</span><br>
+                            <span>{{ post.author }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <hr>
+
+            <!-- Labels / tags -->
+
+
+            <!-- END Introduction Menu -->
+        </div>
+
+        <!-- END GRID -->
+    </div>
+    <br>
+
+    <!-- END w3-content -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
+    <a class="w3-button w3-black {% if not blogs.has_previous %} w3-disabled {% endif %} w3-padding-large w3-margin-bottom"
+            {% if blogs.has_previous %} href="?page={{ blogs.previous_page_number }}" {% endif %}>Previous</a>
+    <a class="w3-button w3-black {% if not blogs.has_next %} w3-disabled {% endif %} w3-padding-large w3-margin-bottom"
+            {% if blogs.has_next %} href="?page={{ blogs.next_page_number }}" {% endif %}>Next &raquo;</a>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+</body>
+</html>
